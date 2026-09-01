@@ -1,0 +1,40 @@
+
+export const REFERENCE_PICTURE_TILES = [
+  "/manus-storage/0F31B765-09CF-479F-9909-73BE91F7C1E4_c21c36bd.jpg",
+  "/manus-storage/589A8B41-AD51-4E0C-BA80-DD72062B9EC1_15516ba7.jpg",
+  "/manus-storage/02240ABB-407A-4985-8497-F23DAEED0A08_4e5c8e51.jpg",
+  "/manus-storage/3B75A832-18FE-4DF9-BFF0-E033A5D2421B_f7589c99.jpg",
+  "/manus-storage/D31C3B4F-7BCF-4567-ADEC-5042607AE9E0_555ec6d6.jpg",
+  "/manus-storage/3F8B1E4A-3F9D-4661-A170-2F617034AFD9_9e5a0154.jpg",
+  "/manus-storage/247F79AB-1B2E-459B-AE9F-B6E1E9091836_485c80e1.jpg",
+  "/manus-storage/13BE0240-8FB8-450A-9C8D-5563E4E68A7A_d9dfbb63.jpg",
+  "/manus-storage/9D078558-1896-4EA7-BCB8-F497D4EEE4DF_ee4a8e4e.jpg",
+  "/manus-storage/F281A9AE-0DA4-4969-A381-2A6FCB97F7E4_b09202f0.jpg",
+  "/manus-storage/20427892-6290-4B93-8A17-B322F00E35D7_f68d2a3d.jpg",
+  "/manus-storage/7F684C4E-0C97-43EF-A2CF-7E7A26405E89_55f0d6aa.jpg",
+  "/manus-storage/E21DC02D-B527-4DC6-9FCC-D417370E112A_3646c58e.jpg",
+  "/manus-storage/82955931-FC38-4008-8481-4709039CAE6F_8f8f33a3.jpg",
+  "/manus-storage/E6F52163-12D8-42C2-9F5B-C22B859BC720_564c6255.jpg",
+  "/manus-storage/A697F2ED-D3F9-4875-A01B-4AC6A38A3597_0a74000c.jpg",
+  "/manus-storage/0B286833-85B2-428A-9C5C-C371853C1F88_8c81db44.jpg",
+  "/manus-storage/D3F23855-C4A0-42A0-8F80-3D0796DDE7CB_e390d162.jpg",
+  "/manus-storage/18561B44-3C9A-4442-A041-F916CD5DC03C_22e49ac0.jpg",
+  "/manus-storage/396914B5-E7C8-4D5A-8E42-CB688FCC6F77_61f2ae3e.jpg",
+  "/manus-storage/F4230B69-47BA-43E2-8859-FCA9E92446D9_799f26b8.jpg",
+  "/manus-storage/72F58EED-3B20-4509-AD95-57969EA76153_25bf36c1.jpg",
+  "/manus-storage/6B36B023-BCCE-4E51-9618-24FB7EB142B3_79815742.jpg",
+  "/manus-storage/2DDE7103-1290-4D9C-81DE-230E664C8831_6bdf21ee.jpg",
+  "/manus-storage/301FC993-AE2D-4921-B0EE-F9BDD1DB32F6_e28ba1f8.jpg",
+  "/manus-storage/3B63AC19-3802-4928-8CBA-6082AF769FA0_3ad7c901.jpg",
+  "/manus-storage/IMG_8747_8fdacb88.jpeg",
+  "/manus-storage/IMG_8638_618844cc.jpeg",
+  "/manus-storage/IMG_8626_8a084d2f.jpeg",
+  "/manus-storage/IMG_8647_7ac7a84c.jpeg",
+  "/manus-storage/IMG_8746_9a0ce663.jpeg",
+  "/manus-storage/IMG_8749_cb1dad09.jpeg",
+  "/manus-storage/IMG_8748_81736b30.jpeg",
+] as const;
+
+if (REFERENCE_PICTURE_TILES.length !== 33) {
+  throw new Error("Uploaded picture tile manifest must contain exactly 33 source images");
+}
