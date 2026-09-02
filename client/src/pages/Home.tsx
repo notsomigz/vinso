@@ -16,7 +16,18 @@ export default function Home() {
   const [typedNote, setTypedNote] = useState("");
   const [hasRevealedLetter, setHasRevealedLetter] = useState(false);
   const [noteAvailable, setNoteAvailable] = useState(false);
+  const [audioReady, setAudioReady] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const ensureAudioCanPlay = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    audio.volume = 0.7;
+    audio.muted = false;
+    audio.play().catch(() => undefined);
+    setAudioReady(true);
+  };
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -31,10 +42,24 @@ export default function Home() {
     if (!audio) return;
 
     audio.volume = 0.7;
-    if (runState === "launch") {
+    if (runState === "launch" && audioReady) {
       void audio.play().catch(() => undefined);
     }
-  }, [runState]);
+  }, [runState, audioReady]);
+
+  useEffect(() => {
+    const enableAudioOnInteraction = () => {
+      ensureAudioCanPlay();
+    };
+
+    window.addEventListener("pointerdown", enableAudioOnInteraction, { once: true });
+    window.addEventListener("keydown", enableAudioOnInteraction, { once: true });
+
+    return () => {
+      window.removeEventListener("pointerdown", enableAudioOnInteraction);
+      window.removeEventListener("keydown", enableAudioOnInteraction);
+    };
+  }, []);
 
   useEffect(() => {
     if (runState !== "launch") {
@@ -81,7 +106,14 @@ export default function Home() {
         }
       `}</style>
       <GalaxyScene runState={runState} initialTime={previewScene ? previewTime : 0} />
-      <audio ref={audioRef} src={AUDIO_URL} autoPlay loop preload="auto" aria-hidden="true" />
+      <audio
+        ref={audioRef}
+        src={AUDIO_URL}
+        loop
+        preload="auto"
+        aria-hidden="true"
+        onCanPlay={() => setAudioReady(true)}
+      />
 
       <div
         style={{
