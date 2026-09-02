@@ -823,6 +823,7 @@ export default function GalaxyScene({ runState, initialTime = 0, isPlaying = tru
       [shuffledTileUrls[index], shuffledTileUrls[swapIndex]] = [shuffledTileUrls[swapIndex], shuffledTileUrls[index]];
     }
 
+    let shufflePhotoTiles: (() => void) | null = null;
     const initializePhotoRing = async () => {
       const photoTextures = await loadPhotoTextures(shuffledTileUrls);
       if (disposed) return;
@@ -830,7 +831,12 @@ export default function GalaxyScene({ runState, initialTime = 0, isPlaying = tru
       photoRing.ring.rotation.y = initialTime * 60 * RING_ROTATION_SPEED;
       const loadedPhotoTextures = new Map<string, THREE.Texture>();
       photoTextures.forEach((texture) => {
-        const matchedUrl = shuffledTileUrls.find((url) => url === texture.image?.currentSrc || url === texture.image?.src || texture.image?.src.endsWith(new URL(url, window.location.origin).pathname.split("/").at(-1) ?? ""));
+        const image = texture.image as HTMLImageElement | undefined;
+        const matchedUrl = shuffledTileUrls.find((url) => {
+          const currentSrc = image?.currentSrc ?? "";
+          const src = image?.src ?? "";
+          return url === currentSrc || url === src || src.endsWith(new URL(url, window.location.origin).pathname.split("/").at(-1) ?? "");
+        });
         if (matchedUrl) loadedPhotoTextures.set(matchedUrl, texture);
       });
       const applyPhotoOrder = (urls: string[]) => {
@@ -839,13 +845,16 @@ export default function GalaxyScene({ runState, initialTime = 0, isPlaying = tru
           const url = urls[index % urls.length];
           item.detailUrl = url;
           const material = item.sprite.material as THREE.SpriteMaterial;
-          const texture = loadedPhotoTextures.get(url) ?? photoTextures.find((candidate) => candidate.image?.src?.includes(url.split("/").at(-1) ?? ""));
+          const texture = loadedPhotoTextures.get(url) ?? photoTextures.find((candidate) => {
+            const image = candidate.image as HTMLImageElement | undefined;
+            return image?.src?.includes(url.split("/").at(-1) ?? "") ?? false;
+          });
           if (texture) material.map = texture;
           material.opacity = Math.max(item.baseOpacity, 0.9);
           material.needsUpdate = true;
         });
       };
-      const shufflePhotoTiles = () => {
+      shufflePhotoTiles = () => {
         if (!photoRing) return;
         const nextOrder = Array.from({ length: PHOTO_TILE_COUNT }, (_, index) => TILE_URLS[index % TILE_URLS.length]);
         for (let index = nextOrder.length - 1; index > 0; index -= 1) {
@@ -1034,13 +1043,14 @@ export default function GalaxyScene({ runState, initialTime = 0, isPlaying = tru
       disposed = true;
       window.cancelAnimationFrame(frame);
       window.removeEventListener("resize", onResize);
-    renderer.domElement.removeEventListener("pointermove", onPointerMove);
-    renderer.domElement.removeEventListener("pointerleave", onPointerLeave);
-    renderer.domElement.removeEventListener("click", onCanvasClick);
+      renderer.domElement.removeEventListener("pointermove", onPointerMove);
+      renderer.domElement.removeEventListener("pointerleave", onPointerLeave);
+      renderer.domElement.removeEventListener("click", onCanvasClick);
       window.removeEventListener("keydown", onKeyDown);
-      window.removeEventListener("shuffle-photo-tiles", shufflePhotoTiles);
+      if (shufflePhotoTiles) {
+        window.removeEventListener("shuffle-photo-tiles", shufflePhotoTiles);
+      }
       closeDetail();
-    renderer.dispose();
       renderer.dispose();
       mount.removeChild(renderer.domElement);
       scene.traverse((object) => {

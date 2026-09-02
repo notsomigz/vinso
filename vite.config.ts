@@ -74,6 +74,28 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
+    chunkSizeWarningLimit: 900,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          "react-vendor": ["react", "react-dom", "wouter"],
+          "three-vendor": [
+            "three",
+            "three/examples/jsm/controls/OrbitControls.js",
+            "three/examples/jsm/loaders/FontLoader.js",
+            "three/examples/jsm/geometries/TextGeometry.js",
+          ],
+          "ui-vendor": [
+            "framer-motion",
+            "lucide-react",
+            "sonner",
+            "recharts",
+            "@radix-ui/react-dialog",
+            "@radix-ui/react-tooltip",
+          ],
+        },
+      },
+    },
   },
   server: {
     port: 3000,
